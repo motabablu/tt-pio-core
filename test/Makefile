@@ -5,7 +5,18 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v
+PROJECT_SOURCES = tt_um_pio_core.sv \
+                  CORE_PKG.sv \
+                  ASIC_TOP.sv \
+                  CORE_TOP.sv \
+                  ALU.sv \
+                  DECODER.sv \
+                  DP_SRAM.sv \
+                  FIFO.sv \
+                  REG_FILE.sv \
+                  SMU.sv \
+                  SPI.sv \
+                  TIMING_CTRL.sv
 
 ifneq ($(GATES),yes)
 
@@ -13,6 +24,7 @@ ifneq ($(GATES),yes)
 SIM_BUILD				= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
 COMPILE_ARGS 		+= -I$(SRC_DIR)
+COMPILE_ARGS 		+= -g2012
 
 else
 
