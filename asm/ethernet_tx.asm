@@ -5,7 +5,7 @@
 //   Pin 0 (0x0001) : TX Differential Output
 // ============================================================================
 
-    // --- 1. Bootstrap Constants & Configure Direction ---
+    // Bootstrap Constants & Configure Direction
     SMU_CMD CLR                 // R_SMU <= 0xFFFF
     SMU_CMD LFSR                // R_SMU <= 0xFFFE
     MOV     R_SMU, R_SMU        
@@ -17,11 +17,11 @@
     ADD     R3, R2, R2          // R3 = 4
     SLL     R4, R1, R3          // R4 = 16 (Bits per word)
 
-    // --- 2. Idle State (0V Differential) ---
+    // Idle State (0V Differential)
     MOV     R_PIN_OUT, R0       // Idle line at 0
     DELAY   8                   // Hold idle
 
-    // --- 3. Pop Word Count (Outer Loop setup) ---
+    // Pop Word Count (Outer Loop setup)
     POP     R11                 // R11 <= Number of 16-bit words in frame
 
 word_loop:
@@ -32,7 +32,7 @@ bit_loop:
     AND     R6, R5, R1          // Isolate LSB (R5 & 1)
     JZ      send_zero           // Branch if data bit is 0
 
-    // --- Logic 1 (0 -> 1 transition) ---
+    // Logic 1 (0 -> 1 transition)
 send_one:                       
     MOV     R_PIN_OUT, R0       // Drive 0 (First half)
     DELAY   9                   // 1 + 9 = 10 cycles
@@ -40,7 +40,7 @@ send_one:
     DELAY   3                   // 1 + 3 + 1 (JMP) + 5 (Loop) = 10 cycles
     JMP     next_bit
 
-    // --- Logic 0 (1 -> 0 transition) ---
+    // Logic 0 (1 -> 0 transition)
 send_zero:                      
     MOV     R_PIN_OUT, R1       // Drive 1 (First half)
     DELAY   9                   // 1 + 9 = 10 cycles
@@ -55,7 +55,7 @@ next_bit:
     SUB     R11, R11, R1        // Decrement word counter
     JNZ     word_loop           // Jump to next word if R11 > 0
 
-    // --- 4. TP_IDL (Normal Link Pulse / End of Transmission) ---
+    // --- 4. TP_IDL (Normal Link Pulse / End of Transmission)
     // Ethernet standard requires driving the line High for ~3 bit times before Idle
     MOV     R_PIN_OUT, R1       
     DELAY   60                  // Hold High for 3 bit times (3 * 20 cycles)

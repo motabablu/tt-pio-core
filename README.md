@@ -1,23 +1,25 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Tiny Tapeout Verilog Project Template
+# 16-bit RISC Protocol Emulator
 
 - [Read the documentation for project](docs/info.md)
+
+This repository contains the SystemVerilog RTL, verification framework, and custom software toolchain for a 16-bit RISC I/O co-processor. The core is a single-cycle, Harvard architecture designed for deterministic, cycle-accurate multi-protocol emulation (SPI, I2C, USB 1.1, CAN, UART, Ethernet) and is targeted for the Tiny Tapeout IHP 130nm CMOS5L open-source silicon shuttle.
+
+## Repository Structure
+
+- **src/**: Core SystemVerilog RTL, including the ALU, Decoder, custom SMU co-processor, and integrated IHP dual-port SRAM macros (`RM_IHPSG13_2P_1024x16_c2_bm_bist`), along with the Tiny Tapeout physical wrapper.
+- **test/**: cocotb and Icarus Verilog testing framework configured for the Tiny Tapeout CI/CD pipeline.
+- **asm/**: Custom Python-based assembler (`compiler.py`) and detailed Instruction Set Architecture (ISA) documentation.
+- **sim/**: Python Golden Model and SystemVerilog scoreboards used for protocol and instruction verification.
+
+---
 
 ## What is Tiny Tapeout?
 
 Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
 
 To learn more and get started, visit https://tinytapeout.com.
-
-## Set up your Verilog project
-
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
-
-The GitHub action will automatically build the ASIC files using [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/).
 
 ## Enable GitHub actions to build the results page
 
@@ -34,7 +36,6 @@ The GitHub action will automatically build the ASIC files using [OpenLane](https
 ## What next?
 
 - [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
 - Share your project on your social network of choice:
   - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
   - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)

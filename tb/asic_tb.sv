@@ -10,11 +10,11 @@ module ASIC_TB ();
   localparam int  MAX_EXP_ITEMS = 1024;
 
   // Simulation file paths
-  localparam string PROG_HEX_PATH     = "C:/Polito/Stuff/PIO/sim/program.hex";
-  localparam string H2C_HEX_PATH      = "C:/Polito/Stuff/PIO/sim/h2c.hex";
-  localparam string EXP_PINS_HEX_PATH = "C:/Polito/Stuff/PIO/sim/expected_pins.hex";
-  localparam string EXP_C2H_HEX_PATH  = "C:/Polito/Stuff/PIO/sim/expected_c2h.hex";
-  localparam string PAD_IN_HEX_PATH   = "C:/Polito/Stuff/PIO/sim/pad_in.hex";
+  localparam string PROG_HEX_PATH     = "../sim/program.hex";
+  localparam string H2C_HEX_PATH      = "../sim/h2c.hex";
+  localparam string EXP_PINS_HEX_PATH = "../sim/expected_pins.hex";
+  localparam string EXP_C2H_HEX_PATH  = "../sim/expected_c2h.hex";
+  localparam string PAD_IN_HEX_PATH   = "../sim/pad_in.hex";
 
   logic                     clk;
   logic                     reset_n;

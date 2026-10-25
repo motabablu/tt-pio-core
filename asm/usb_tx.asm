@@ -6,7 +6,7 @@
 //   0x0000         : USB SE0 (Single-Ended Zero for EOP)
 // ============================================================================
 
-    // --- 1. Bootstrap Constants (1, 2, 3, 6, 16) ---
+    // Bootstrap Constants (1, 2, 3, 6, 16)
     SMU_CMD CLR                 // R_SMU <= 0xFFFF
     SMU_CMD LFSR                // R_SMU <= 0xFFFE
     MOV     R_SMU, R_SMU        // Latch 0xFFFE
@@ -18,13 +18,13 @@
     ADD     R6, R4, R2          // R6 = 6 (USB Bit-Stuff threshold = 6 consecutive '1's)
     SLL     R4, R1, R4          // R4 = 16 (16-bit payload counter)
 
-    // --- 2. Configure D+ and D- as Outputs & Drive Bus Idle ('J' = 0x0001) ---
+    // Configure D+ and D- as Outputs & Drive Bus Idle ('J' = 0x0001)
     MOV     R_PIN_DIR, R3       // DIR <= 0x0003 (Pins 0 & 1 = Outputs)
     MOV     R8, R1              // R8 = Current NRZI bus state (starts at 'J' = 0x0001)
     MOV     R_PIN_OUT, R8       // Drive USB Idle ('J')
     DELAY   4                   // Idle hold time
 
-    // --- 3. Pop USB Polynomial & Data Payload, Compute USB CRC-16 ---
+    // Pop USB Polynomial & Data Payload, Compute USB CRC-16
     POP     R5                  // Pop H2C[0] (e.g., 0x6767 or 0x8005 USB Poly)
     MOV     R_SMU, R5           // Load custom polynomial into SMU
     SMU_CMD SETPOLY             // poly_reg <= H2C[0]
@@ -35,7 +35,7 @@
     SMU_CMD CRC16               // Compute USB CRC-16 over payload
     PUSH    R_SMU               // Push USB CRC-16 to C2H_FIFO[0]
 
-    // --- 4. Transmit USB SYNC Field (K-J-K-J-K-J-K-K) ---
+    // Transmit USB SYNC Field (K-J-K-J-K-J-K-K)
     MOV     R7, R6              // R7 = 6 toggles (K-J-K-J-K-J)
 sync_loop:
     XOR     R8, R8, R3          // Toggle NRZI state (J <-> K) for '0' bit
@@ -48,7 +48,7 @@ sync_loop:
     MOV     R_PIN_OUT, R8       // Drive 'K'
     DELAY   8                   // Hold 'K' for 2 bit times (final '0' + '1' of SYNC)
 
-    // --- 5. Transmit 16-Bit Payload (LSB-First NRZI + Dynamic Bit-Stuffing) ---
+    // Transmit 16-Bit Payload (LSB-First NRZI + Dynamic Bit-Stuffing)
     MOV     R9, R0              // R9 = Consecutive '1's counter (starts at 0)
 usb_bit_loop:
     AND     R10, R5, R1         // Extract LSB (R5 & 1)
@@ -61,7 +61,7 @@ nrzi_one:                       // Bit == 1: Hold current NRZI state, increment 
     SUB     R11, R9, R6         // Check if R9 == 6 (sets q_zero_flag if 6 ones reached!)
     JNZ     next_usb_bit        // If < 6 ones, continue normally
 
-    // --- BIT STUFFING TRIGGERED! Insert forced '0' toggle ---
+    // BIT STUFFING TRIGGERED! Insert forced '0' toggle
     XOR     R8, R8, R3          // Toggle bus state (forced '0' bit)
     MOV     R_PIN_OUT, R8       // Drive stuffed transition onto D+/D-
     DELAY   5                   // Hold stuffed bit for 1 USB bit period
@@ -79,7 +79,7 @@ next_usb_bit:
     SUB     R4, R4, R1          // Decrement 16-bit counter
     JNZ     usb_bit_loop
 
-    // --- 6. Transmit USB End-of-Packet (EOP: 2-Bit SE0 + 1-Bit J) ---
+    // Transmit USB End-of-Packet (EOP: 2-Bit SE0 + 1-Bit J)
     MOV     R_PIN_OUT, R0       // Drive SE0 (D+ = 0, D- = 0)
     DELAY   10                  // Hold SE0 for 2 USB bit times
     MOV     R_PIN_OUT, R1       // Drive 'J' (D+ = 1, D- = 0) for 1 bit time

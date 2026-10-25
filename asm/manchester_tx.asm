@@ -4,7 +4,7 @@
 //   Bit 0 (0x0001) : TX Output
 // ============================================================================
 
-    // --- 1. Bootstrap Constants & Configure Direction ---
+    // Bootstrap Constants & Configure Direction
     SMU_CMD CLR                 // R_SMU <= 0xFFFF
     SMU_CMD LFSR                // R_SMU <= 0xFFFE
     MOV     R_SMU, R_SMU        // Latch 0xFFFE
@@ -16,14 +16,14 @@
     ADD     R3, R2, R2          // R3 = 4
     SLL     R4, R1, R3          // R4 = 16 (16-bit payload counter)
 
-    // --- 2. Idle State (Low) ---
+    // Idle State (Low)
     MOV     R_PIN_OUT, R0       // Idle line at 0
     DELAY   4                   // Hold idle
 
-    // --- 3. Pop Payload ---
+    // Pop Payload
     POP     R5                  // R5 <= H2C[0] (16-bit payload)
 
-    // --- 4. Manchester Bit-Banging Loop ---
+    // Manchester Bit-Banging Loop
 manchester_loop:
     AND     R6, R5, R1          // Isolate LSB (R5 & 1)
     JZ      send_zero           // Branch if data bit is 0
@@ -46,7 +46,7 @@ next_bit:
     SUB     R4, R4, R1          // Decrement counter
     JNZ     manchester_loop     // Loop until 16 bits transmitted
 
-    // --- 5. Return to Idle ---
+    // Return to Idle
     MOV     R_PIN_OUT, R0       // Return to idle (0)
     DELAY   4
 
