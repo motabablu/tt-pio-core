@@ -1,0 +1,7 @@
+0006 // [Word 1] Total Word Count (6 words to transmit)
+5555 // [Word 2] Preamble Bytes 0, 1 (0x55, 0x55)
+5555 // [Word 3] Preamble Bytes 2, 3 (0x55, 0x55)
+5555 // [Word 4] Preamble Bytes 4, 5 (0x55, 0x55)
+D555 // [Word 5] Preamble Byte 6 (0x55) + SFD (0xD5)
+BEEF // [Word 6] Payload MAC/Data 1
+CAFE // [Word 7] Payload MAC/Data 2

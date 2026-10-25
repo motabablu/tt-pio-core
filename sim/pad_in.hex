@@ -1,0 +1,5 @@
+// External Slave driving 4'b1101 (0xD) onto Pin 0 (SDA) during RX turnaround window
+002D_0001 // Cycle 45 (0x002D): Drive SDA = 1 (Bit 3)
+0037_0001 // Cycle 55 (0x0037): Drive SDA = 1 (Bit 2)
+0041_0000 // Cycle 65 (0x0041): Drive SDA = 0 (Bit 1)
+004B_0001 // Cycle 75 (0x004B): Drive SDA = 1 (Bit 0)
