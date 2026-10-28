@@ -4,7 +4,7 @@
 import os
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, Timer
+from cocotb.triggers import RisingEdge, Timer, ClockCycles
 
 # Hardware Port Mapping
 SPI_SCK_BIT  = 0
