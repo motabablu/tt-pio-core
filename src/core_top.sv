@@ -1,32 +1,32 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module CORE_TOP(
   input  logic                    CLK_i,
   input  logic                    RESET_n_i,
 
   // Instruction memory
-  output logic [PC_WIDTH - 1:0]   PC_o,
-  input  instr_t                  INSTR_i,
+  output logic [CORE_PKG::PC_WIDTH - 1:0]   PC_o,
+  input  CORE_PKG::instr_t                  INSTR_i,
   
   // Physical I/O
-  input  logic [DATA_WIDTH - 1:0] PIN_IN_i,
-  output logic [DATA_WIDTH - 1:0] PIN_OUT_o,
-  output logic [DATA_WIDTH - 1:0] PIN_DIR_o,
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_IN_i,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_OUT_o,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_DIR_o,
   
   // SMU
-  input  logic [DATA_WIDTH - 1:0] SMU_DATA_i,
-  output logic [DATA_WIDTH - 1:0] SMU_DATA_o,
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0] SMU_DATA_i,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] SMU_DATA_o,
   output logic                    SMU_CMD_EN_o,
   
   // FIFO
-  input  logic [DATA_WIDTH - 1:0] FIFO_DATA_i,
-  output logic [DATA_WIDTH - 1:0] FIFO_DATA_o,
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0] FIFO_DATA_i,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] FIFO_DATA_o,
   output logic                    FIFO_PUSH_o,
   output logic                    FIFO_POP_o
 );
+
+  import CORE_PKG::*;
 
   // Decoder
   logic                         alu_en;

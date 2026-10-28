@@ -1,22 +1,22 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module FIFO (
   input   logic                     CLK_i,
   input   logic                     RESET_n_i,
   
   // Write
-  input   logic [DATA_WIDTH - 1:0]  DATA_i,
+  input   logic [CORE_PKG::DATA_WIDTH - 1:0]  DATA_i,
   input   logic                     PUSH_i,
   output  logic                     FULL_o,
   
   // Read
-  output  logic [DATA_WIDTH - 1:0]  DATA_o,
+  output  logic [CORE_PKG::DATA_WIDTH - 1:0]  DATA_o,
   input   logic                     POP_i,
   output  logic                     EMPTY_o
 );
+
+  import CORE_PKG::*;
 
   // Address width
   localparam int ADDR_WIDTH = $clog2(FIFO_DEPTH);

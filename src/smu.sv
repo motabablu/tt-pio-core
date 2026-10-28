@@ -1,20 +1,20 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module SMU (
   input   logic                     CLK_i,
   input   logic                     RESET_n_i,
   
   // Control
   input   logic                     SMU_CMD_EN_i,
-  input   smu_op_e                  SMU_OP_i,
+  input   CORE_PKG::smu_op_e                  SMU_OP_i,
   
   // Data
-  input   logic [DATA_WIDTH - 1:0]  SMU_DATA_i,
-  output  logic [DATA_WIDTH - 1:0]  SMU_DATA_o
+  input   logic [CORE_PKG::DATA_WIDTH - 1:0]  SMU_DATA_i,
+  output  logic [CORE_PKG::DATA_WIDTH - 1:0]  SMU_DATA_o
 );
+
+  import CORE_PKG::*;
 
   // CRC-16 defaults
   localparam logic [DATA_WIDTH - 1:0] DEFAULT_POLY = 16'h6767;

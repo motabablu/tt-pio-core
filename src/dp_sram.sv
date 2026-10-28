@@ -1,20 +1,20 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module DP_SRAM (
   input   logic                     CLK_i,
   
   // Read port
-  input   logic [PC_WIDTH - 1:0]    ADDR_RD_i,
-  output  instr_t                   DATA_RD_o,
+  input   logic [CORE_PKG::PC_WIDTH - 1:0]    ADDR_RD_i,
+  output  CORE_PKG::instr_t                   DATA_RD_o,
   
   // WRite
   input   logic                     WE_i,
-  input   logic [INSTR_WIDTH - 1:0] ADDR_WR_i,
-  input   logic [INSTR_WIDTH - 1:0] DATA_WR_i
+  input   logic [CORE_PKG::INSTR_WIDTH - 1:0] ADDR_WR_i,
+  input   logic [CORE_PKG::INSTR_WIDTH - 1:0] DATA_WR_i
 );
+
+import CORE_PKG::*;
 
 wire [15:0] dout;
 

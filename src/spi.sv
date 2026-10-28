@@ -1,8 +1,6 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module SPI (
   input   logic                     CLK_i,
   input   logic                     RESET_n_i,
@@ -15,20 +13,22 @@ module SPI (
   
   // IMEM
   output  logic                     IMEM_WE_o,
-  output  logic [INSTR_WIDTH - 1:0] IMEM_ADDR_o,
-  output  logic [INSTR_WIDTH - 1:0] IMEM_DATA_o,
+  output  logic [CORE_PKG::INSTR_WIDTH - 1:0] IMEM_ADDR_o,
+  output  logic [CORE_PKG::INSTR_WIDTH - 1:0] IMEM_DATA_o,
   output  logic                     CORE_RELEASE_o,
   
   // H2C FIFO
-  output  logic [DATA_WIDTH - 1:0]  H2C_DATA_o,
+  output  logic [CORE_PKG::DATA_WIDTH - 1:0]  H2C_DATA_o,
   output  logic                     H2C_PUSH_o,
   input   logic                     H2C_FULL_i,
   
   // C2H FIFO
-  input   logic [DATA_WIDTH - 1:0]  C2H_DATA_i,
+  input   logic [CORE_PKG::DATA_WIDTH - 1:0]  C2H_DATA_i,
   output  logic                     C2H_POP_o,
   input   logic                     C2H_EMPTY_i
 );
+
+  import CORE_PKG::*;
 
   // 2-FF sync
   logic [2:0] sck_sync;

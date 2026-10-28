@@ -1,25 +1,25 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module TIMING_CTRL (
   input  logic                        CLK_i,
   input  logic                        RESET_n_i,
    
   // Decoder control signals
   input  logic                        DELAY_EN_i,
-  input  logic [IMM_WIDTH - 1:0]      DELAY_VAL_i,
+  input  logic [CORE_PKG::IMM_WIDTH - 1:0]      DELAY_VAL_i,
   input  logic                        WAIT_EDGE_EN_i,
-  input  logic [REG_ADDR_WIDTH - 1:0] EDGE_PIN_i,
+  input  logic [CORE_PKG::REG_ADDR_WIDTH - 1:0] EDGE_PIN_i,
   input  logic                        EDGE_POLARITY_i,
    
   // Physical pins
-  input  logic [DATA_WIDTH - 1:0]     PIN_IN_i,
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0]     PIN_IN_i,
    
   // Stall
   output logic                        STALL_o
 );
+
+  import CORE_PKG::*;
 
   logic [IMM_WIDTH - 1:0]  delay_counter;
   logic [DATA_WIDTH - 1:0] pin_in_prev;

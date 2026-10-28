@@ -1,31 +1,30 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-// Package
-import CORE_PKG::*;
-
 module REG_FILE(
   input logic     CLK_i,
   input logic     RESET_n_i,
    
   // Core
   input  logic                        WRITE_EN_i,
-  input  logic [REG_ADDR_WIDTH - 1:0] WRITE_ADDR_i,
-  input  logic [DATA_WIDTH - 1:0]     WRITE_DATA_i,
-  input  logic [REG_ADDR_WIDTH - 1:0] READ_ADDR1_i,
-  input  logic [REG_ADDR_WIDTH - 1:0] READ_ADDR2_i,
-  output logic [DATA_WIDTH - 1:0]     READ_DATA1_o,
-  output logic [DATA_WIDTH - 1:0]     READ_DATA2_o,
+  input  logic [CORE_PKG::REG_ADDR_WIDTH - 1:0] WRITE_ADDR_i,
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0]     WRITE_DATA_i,
+  input  logic [CORE_PKG::REG_ADDR_WIDTH - 1:0] READ_ADDR1_i,
+  input  logic [CORE_PKG::REG_ADDR_WIDTH - 1:0] READ_ADDR2_i,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0]     READ_DATA1_o,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0]     READ_DATA2_o,
    
   // I/O
-  input  logic [DATA_WIDTH - 1:0] PIN_IN_i,      // R12
-  output logic [DATA_WIDTH - 1:0] PIN_OUT_o,     // R13
-  output logic [DATA_WIDTH - 1:0] PIN_DIR_o,     // R14
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_IN_i,      // R12
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_OUT_o,     // R13
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] PIN_DIR_o,     // R14
    
   // SMU
-  input  logic [DATA_WIDTH - 1:0] SMU_DATA_i,    // R15 (READ)
-  output logic [DATA_WIDTH - 1:0] SMU_DATA_o     // R15 (WRITE)
+  input  logic [CORE_PKG::DATA_WIDTH - 1:0] SMU_DATA_i,    // R15 (READ)
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] SMU_DATA_o     // R15 (WRITE)
 );
+
+  import CORE_PKG::*;
 
   // General Purpose Registers
   logic [DATA_WIDTH - 1:0] gpr [0:GPR_COUNT - 1];

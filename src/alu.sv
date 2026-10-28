@@ -1,21 +1,20 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-// Package
-import CORE_PKG::*;
-
 module ALU (
   // Opcode
-  input alu_op_e                  ALU_OP_i,
+  input CORE_PKG::alu_op_e                  ALU_OP_i,
   
   // Operands
-  input logic [DATA_WIDTH - 1:0]  SRC1_i,
-  input logic [DATA_WIDTH - 1:0]  SRC2_i,
+  input logic [CORE_PKG::DATA_WIDTH - 1:0]  SRC1_i,
+  input logic [CORE_PKG::DATA_WIDTH - 1:0]  SRC2_i,
   
   // Outputs
-  output logic [DATA_WIDTH - 1:0] RESULT_o,
+  output logic [CORE_PKG::DATA_WIDTH - 1:0] RESULT_o,
   output logic                    ZERO_FLAG_o
 );
+
+import CORE_PKG::*;
 
   // ALU (combinational)
   always_comb begin

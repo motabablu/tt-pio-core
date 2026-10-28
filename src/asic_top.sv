@@ -1,8 +1,6 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-import CORE_PKG::*;
-
 module ASIC_TOP (
   input   logic     CLK_i,
   input   logic     RESET_n_i,
@@ -14,10 +12,12 @@ module ASIC_TOP (
   input   logic     SPI_CS_n_i,
   
   // Pins
-  input   logic [DATA_WIDTH - 1:0]  PAD_IN_i,
-  output  logic [DATA_WIDTH - 1:0]  PAD_OUT_o,
-  output  logic [DATA_WIDTH - 1:0]  PAD_DIR_o
+  input   logic [CORE_PKG::DATA_WIDTH - 1:0]  PAD_IN_i,
+  output  logic [CORE_PKG::DATA_WIDTH - 1:0]  PAD_OUT_o,
+  output  logic [CORE_PKG::DATA_WIDTH - 1:0]  PAD_DIR_o
 );
+  
+  import CORE_PKG::*;
 
   // 2 FF sync
   logic [DATA_WIDTH - 1:0]  pad_in_meta;

@@ -1,15 +1,12 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-// Package
-import CORE_PKG::*;
-
 module DECODER (
-  input instr_t  INSTR_i,
+  input CORE_PKG::instr_t  INSTR_i,
  
   // Control
   output logic     ALU_EN_o,
-  output alu_op_e  ALU_OP_o,
+  output CORE_PKG::alu_op_e  ALU_OP_o,
   output logic     REG_WRITE_EN_o,
  
   // Timing
@@ -21,7 +18,7 @@ module DECODER (
   
   // Jump
   output logic                    JMP_EN_o,
-  output jmp_cond_e               JMP_COND_o,
+  output CORE_PKG::jmp_cond_e               JMP_COND_o,
   output logic [IMM_WIDTH - 1:0]  JMP_OFFSET_o,
   
   // FIFO
@@ -30,6 +27,8 @@ module DECODER (
   output logic SMU_CMD_EN_o
 );
   
+  import CORE_PKG::*;
+
   logic [IMM_WIDTH - 1:0] imm;
   
   assign imm      = {INSTR_i.src1_reg, INSTR_i.src2_reg};
