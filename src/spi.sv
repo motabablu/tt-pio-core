@@ -107,7 +107,7 @@ module SPI (
           rx_shift_reg  <= full_rx_frame;
           bit_cnt       <= bit_cnt + 1'b1;
           
-          if (bit_cnt == (CMD_WIDTH - 1)) begin
+          if (bit_cnt == 6'(CMD_WIDTH - 1)) begin
             case (spi_cmd_e'({rx_shift_reg[CMD_WIDTH - 2:0], mosi_sync[1]}))
               SPI_CMD_POP_C2H : begin
                 tx_shift_reg  <= C2H_DATA_i;
@@ -120,7 +120,7 @@ module SPI (
             endcase // spi_cmd_e, rx_shift_reg, CMD_WIDTH, mosi_sync
           end // bit_cnt, CMD_WIDTH
           
-          if (bit_cnt == (FRAME_BITS - 1)) begin
+          if (bit_cnt == 6'(FRAME_BITS - 1)) begin
             case (current_cmd)
               SPI_CMD_RESET_HOLD : begin
                 CORE_RELEASE_o <= 1'b0;
@@ -144,7 +144,7 @@ module SPI (
         end // sck_rising
         
         if (sck_falling) begin
-          if (bit_cnt >= (CMD_WIDTH + INSTR_WIDTH)) begin
+          if (bit_cnt >= 6'(CMD_WIDTH + INSTR_WIDTH)) begin
             SPI_MISO_o    <= tx_shift_reg[DATA_WIDTH - 1];
             tx_shift_reg  <= {tx_shift_reg[DATA_WIDTH - 2:0], 1'b0};
           end else begin
