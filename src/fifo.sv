@@ -13,7 +13,7 @@ module FIFO (
 );
 
   localparam int FIFO_DEPTH = 64;
-  localparam int ADDR_WIDTH = 8;
+  localparam int ADDR_WIDTH = 6;
   
   logic [15:0] mem [0:FIFO_DEPTH - 1];
   

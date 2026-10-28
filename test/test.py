@@ -16,7 +16,9 @@ def resolve_int(val):
     try:
         return int(val)
     except ValueError:
-        return 0
+        # Sanitize 'x' and 'z' to '0' so valid bits aren't masked
+        safe_str = str(val).lower().replace('x', '0').replace('z', '0')
+        return int(safe_str, 2)
 
 def get_pad_out(dut):
     # pad_out[7:0] -> uio_out[7:0], pad_out[14:8] -> uo_out[7:1]

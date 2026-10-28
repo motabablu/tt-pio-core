@@ -10,8 +10,17 @@ module DP_SRAM (
   input   logic [15:0] DATA_WR_i
 );
 
+`ifndef SYNTHESIS
+  // Behavioral RAM for RTL Simulation
+  logic [15:0] mem [0:1023];
+  always_ff @(posedge CLK_i) begin
+    if (WE_i) mem[ADDR_WR_i[9:0]] <= DATA_WR_i;
+    DATA_RD_o <= mem[ADDR_RD_i[9:0]];
+  end
+`else
+  // Physical Macro for OpenLane Synthesis
   wire [15:0] dout;
-
+  
   RM_IHPSG13_2P_1024x16_c2_bm_bist sram_macro (
       .A_CLK(CLK_i),
       .A_MEN(WE_i),
@@ -50,4 +59,6 @@ module DP_SRAM (
   );
 
   assign DATA_RD_o = dout;
+`endif
+
 endmodule
