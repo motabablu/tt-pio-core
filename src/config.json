@@ -36,7 +36,7 @@
     "RM_IHPSG13_2P_1024x16_c2_bm_bist": {
       "instances": {
         "u_asic_top.u_imem.sram": {
-          "location": [42, 80],
+          "location": [42, 20],
           "orientation": "R0"
         }
       },
