@@ -18,17 +18,17 @@ project:
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
     - "tt_um_pio_core.sv"
-    - "CORE_PKG.sv"
-    - "ASIC_TOP.sv"
-    - "CORE_TOP.sv"
-    - "ALU.sv"
-    - "DECODER.sv"
-    - "DP_SRAM.sv"
-    - "FIFO.sv"
-    - "REG_FILE.sv"
-    - "SMU.sv"
-    - "SPI.sv"
-    - "TIMING_CTRL.sv"
+    - "core_pkg.sv"
+    - "asic_top.sv"
+    - "core_top.sv"
+    - "alu.sv"
+    - "decoder.sv"
+    - "dp_sram.sv"
+    - "fifo.sv"
+    - "reg_file.sv"
+    - "smu.sv"
+    - "spi.sv"
+    - "timing_controller.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
