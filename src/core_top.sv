@@ -18,10 +18,13 @@ module CORE_TOP(
   output logic        FIFO_POP_o
 );
 
-  import CORE_PKG::*;
-
-  instr_t instr;
-  assign instr = instr_t'(INSTR_i);
+  logic [3:0] dest_reg;
+  logic [3:0] src1_reg;
+  logic [3:0] src2_reg;
+  
+  assign dest_reg = INSTR_i[11:8];
+  assign src1_reg = INSTR_i[7:4];
+  assign src2_reg = INSTR_i[3:0];
 
   logic        alu_en;
   logic [2:0]  alu_op;
@@ -69,10 +72,10 @@ module CORE_TOP(
     .CLK_i          (CLK_i),
     .RESET_n_i      (RESET_n_i),
     .WRITE_EN_i     (reg_write_en),
-    .WRITE_ADDR_i   (instr.dest_reg),
+    .WRITE_ADDR_i   (dest_reg),
     .WRITE_DATA_i   (reg_write_data),
-    .READ_ADDR1_i   (instr.src1_reg),
-    .READ_ADDR2_i   (instr.src2_reg),
+    .READ_ADDR1_i   (src1_reg),
+    .READ_ADDR2_i   (src2_reg),
     .READ_DATA1_o   (read_data1),
     .READ_DATA2_o   (read_data2),
     .PIN_IN_i       (PIN_IN_i),
@@ -112,11 +115,11 @@ module CORE_TOP(
   always_comb begin
     branch_taken = 1'b0;
     if (jmp_en) begin
-      case (jmp_cond_e'(jmp_cond))
-        JMP_UNCOND  : branch_taken = 1'b1;
-        JMP_NZ      : branch_taken = ~q_zero_flag;
-        JMP_Z       : branch_taken = q_zero_flag;
-        default     : branch_taken = 1'b0;
+      case (jmp_cond)
+        2'b01   : branch_taken = 1'b1;         // JMP_UNCOND
+        2'b10   : branch_taken = ~q_zero_flag; // JMP_NZ
+        2'b11   : branch_taken = q_zero_flag;  // JMP_Z
+        default : branch_taken = 1'b0;
       endcase
     end
   end

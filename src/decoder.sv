@@ -18,15 +18,20 @@ module DECODER (
   output logic        FIFO_POP_o,
   output logic        SMU_CMD_EN_o
 );
-  
-  import CORE_PKG::*;
 
-  instr_t instr;
-  assign instr = instr_t'(INSTR_i);
-
+  logic [3:0] opcode;
+  logic [3:0] dest_reg;
+  logic [3:0] src1_reg;
+  logic [3:0] src2_reg;
   logic [7:0] imm;
-  assign imm      = {instr.src1_reg, instr.src2_reg};
-  assign ALU_EN_o = ~instr.opcode[3];
+
+  assign opcode   = INSTR_i[15:12];
+  assign dest_reg = INSTR_i[11:8];
+  assign src1_reg = INSTR_i[7:4];
+  assign src2_reg = INSTR_i[3:0];
+  assign imm      = INSTR_i[7:0];
+
+  assign ALU_EN_o = ~opcode[3];
   
   always_comb begin
     REG_WRITE_EN_o  = 1'b0;
@@ -45,17 +50,17 @@ module DECODER (
     
     if (ALU_EN_o) begin
       REG_WRITE_EN_o  = 1'b1;
-      ALU_OP_o        = instr.opcode[2:0];
+      ALU_OP_o        = opcode[2:0];
     end else begin
-      case (instr.opcode)
+      case (opcode)
         4'b1000 : begin
           DELAY_EN_o  = 1'b1;
           DELAY_VAL_o = imm;
         end
         4'b1001 : begin
           WAIT_EDGE_EN_o  = 1'b1;
-          EDGE_PIN_o      = instr.dest_reg;
-          EDGE_POLARITY_o = instr.src2_reg[0];
+          EDGE_PIN_o      = dest_reg;
+          EDGE_POLARITY_o = src2_reg[0];
         end
         4'b1010 : begin
           JMP_EN_o      = 1'b1;

@@ -20,7 +20,12 @@ module SPI (
   input   logic         C2H_EMPTY_i
 );
 
-  import CORE_PKG::*;
+  localparam logic [7:0] SPI_CMD_RESET_HOLD = 8'h00;
+  localparam logic [7:0] SPI_CMD_RESET_REL  = 8'h01;
+  localparam logic [7:0] SPI_CMD_WRITE_IMEM = 8'h02;
+  localparam logic [7:0] SPI_CMD_PUSH_H2C   = 8'h03;
+  localparam logic [7:0] SPI_CMD_POP_C2H    = 8'h04;
+  localparam logic [7:0] SPI_CMD_READ_STAT  = 8'h05;
 
   logic [2:0] sck_sync;
   logic [1:0] cs_n_sync;
@@ -47,20 +52,21 @@ module SPI (
   assign cs_active    = ~cs_n_sync[1];
   
   localparam int CMD_WIDTH  = 8;
+  localparam int INSTR_WIDTH = 16;
+  localparam int DATA_WIDTH = 16;
   localparam int FRAME_BITS = CMD_WIDTH + INSTR_WIDTH + DATA_WIDTH;
-  localparam int CNT_WIDTH  = $clog2(FRAME_BITS + 1);
   
-  logic [CNT_WIDTH - 1:0]   bit_cnt;
+  logic [5:0]               bit_cnt;
   logic [FRAME_BITS - 1:0]  rx_shift_reg;
   logic [DATA_WIDTH - 1:0]  tx_shift_reg;
   
-  spi_cmd_e                 current_cmd;
+  logic [7:0]               current_cmd;
   logic [INSTR_WIDTH - 1:0] rx_addr;
   logic [DATA_WIDTH - 1:0]  rx_data;
   logic [FRAME_BITS - 1:0]  full_rx_frame;
   
   assign full_rx_frame  = {rx_shift_reg[FRAME_BITS - 2:0], mosi_sync[1]};
-  assign current_cmd    = spi_cmd_e'(full_rx_frame[FRAME_BITS - 1 : INSTR_WIDTH + DATA_WIDTH]);
+  assign current_cmd    = full_rx_frame[FRAME_BITS - 1 : INSTR_WIDTH + DATA_WIDTH];
   assign rx_addr        = full_rx_frame[INSTR_WIDTH + DATA_WIDTH - 1 : DATA_WIDTH];
   assign rx_data        = full_rx_frame[DATA_WIDTH - 1:0];
   
@@ -91,13 +97,13 @@ module SPI (
           bit_cnt       <= bit_cnt + 1'b1;
           
           if (bit_cnt == 6'(CMD_WIDTH - 1)) begin
-            case (spi_cmd_e'({rx_shift_reg[CMD_WIDTH - 2:0], mosi_sync[1]}))
+            case ({rx_shift_reg[CMD_WIDTH - 2:0], mosi_sync[1]})
               SPI_CMD_POP_C2H : begin
                 tx_shift_reg  <= C2H_DATA_i;
                 C2H_POP_o     <= 1'b1;
               end
               SPI_CMD_READ_STAT : begin
-                tx_shift_reg <= {{(DATA_WIDTH - 2){1'b0}}, H2C_FULL_i, C2H_EMPTY_i};
+                tx_shift_reg <= {14'b0, H2C_FULL_i, C2H_EMPTY_i};
               end
               default : tx_shift_reg <= '0;
             endcase
@@ -120,7 +126,6 @@ module SPI (
                 H2C_DATA_o  <= rx_data;
                 H2C_PUSH_o  <= 1'b1;
               end
-              
               default : ;
             endcase
           end
@@ -138,5 +143,4 @@ module SPI (
       end
     end
   end
-
 endmodule

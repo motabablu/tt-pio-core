@@ -18,7 +18,10 @@ module REG_FILE(
   output logic [15:0] SMU_DATA_o
 );
 
-  import CORE_PKG::*;
+  localparam logic [3:0] PIN_IN_ADDR   = 4'd12;
+  localparam logic [3:0] PIN_OUT_ADDR  = 4'd13;
+  localparam logic [3:0] PIN_DIR_ADDR  = 4'd14;
+  localparam logic [3:0] SMU_DATA_ADDR = 4'd15;
 
   logic [15:0] gpr [0:11];
   integer i;

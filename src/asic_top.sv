@@ -13,13 +13,10 @@ module ASIC_TOP (
   output  logic [15:0]  PAD_DIR_o
 );
 
-  import CORE_PKG::*;
-
   logic [15:0]  pad_in_meta;
   logic [15:0]  pad_in_sync;
   logic [15:0]  pc;
   logic [15:0]  imem_data_rd;
-  instr_t       instr;
   logic         core_reset_n;
   logic         imem_write_en;
   logic [15:0]  imem_write_addr;
@@ -40,8 +37,6 @@ module ASIC_TOP (
   logic [15:0]  smu_data_from_core;
   logic         smu_cmd_en;
 
-  assign instr = instr_t'(imem_data_rd);
-  
   always_ff @(posedge CLK_i or negedge RESET_n_i) begin
     if (!RESET_n_i) begin
       pad_in_meta <= '0;
@@ -123,7 +118,7 @@ module ASIC_TOP (
     .CLK_i        (CLK_i),
     .RESET_n_i    (core_reset_n),
     .SMU_CMD_EN_i (smu_cmd_en),
-    .SMU_OP_i     (smu_op_e'(instr.dest_reg)),
+    .SMU_OP_i     (imem_data_rd[11:8]), 
     .SMU_DATA_i   (smu_data_from_core),
     .SMU_DATA_o   (smu_data_to_core)
   );

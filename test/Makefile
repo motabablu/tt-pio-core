@@ -6,7 +6,6 @@ SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
 PROJECT_SOURCES =   tt_um_pio_core.sv \
-                    core_pkg.sv \
                     asic_top.sv \
                     core_top.sv \
                     alu.sv \

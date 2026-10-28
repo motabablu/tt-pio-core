@@ -13,10 +13,8 @@ module TIMING_CTRL (
   output logic        STALL_o
 );
 
-  import CORE_PKG::*;
-
-  logic [IMM_WIDTH - 1:0]  delay_counter;
-  logic [DATA_WIDTH - 1:0] pin_in_prev;
+  logic [7:0]  delay_counter;
+  logic [15:0] pin_in_prev;
   
   logic edge_detected;
   logic active_delay;
