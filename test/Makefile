@@ -5,18 +5,19 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = tt_um_pio_core.sv \
-                  core_pkg.sv \
-                  asic_top.sv \
-                  core_top.sv \
-                  alu.sv \
-                  decoder.sv \
-                  dp_sram.sv \
-                  fifo.sv \
-                  reg_file.sv \
-                  smu.sv \
-                  spi.sv \
-                  timing_controller.sv
+PROJECT_SOURCES =   tt_um_pio_core.sv \
+                    core_pkg.sv \
+                    asic_top.sv \
+                    core_top.sv \
+                    alu.sv \
+                    decoder.sv \
+                    RM_IHPSG13_2P_1024x16_c2_bm_bist.v \
+                    dp_sram.sv \
+                    fifo.sv \
+                    reg_file.sv \
+                    smu.sv \
+                    spi.sv \
+                    timing_controller.sv
 
 ifneq ($(GATES),yes)
 
