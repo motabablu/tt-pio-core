@@ -3,14 +3,16 @@
 
 # defaults
 SIM ?= icarus
+FST ?= -fst
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
+
+# Core RTL files (No physical SRAM .v model needed here)
 PROJECT_SOURCES =   tt_um_pio_core.sv \
                     asic_top.sv \
                     core_top.sv \
                     alu.sv \
                     decoder.sv \
-                    RM_IHPSG13_2P_1024x16_c2_bm_bist.v \
                     dp_sram.sv \
                     fifo.sv \
                     reg_file.sv \
@@ -21,27 +23,32 @@ PROJECT_SOURCES =   tt_um_pio_core.sv \
 ifneq ($(GATES),yes)
 
 # RTL simulation:
-SIM_BUILD				= sim_build/rtl
+SIM_BUILD       = sim_build/rtl
+COMPILE_ARGS   += -g2012
+COMPILE_ARGS   += -DFUNCTIONAL
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
-COMPILE_ARGS 		+= -I$(SRC_DIR)
-COMPILE_ARGS 		+= -g2012
 
 else
 
 # Gate level simulation:
-SIM_BUILD				= sim_build/gl
-COMPILE_ARGS    += -DGL_TEST
-COMPILE_ARGS    += -DFUNCTIONAL
-COMPILE_ARGS    += -DUSE_POWER_PINS
-COMPILE_ARGS    += -DSIM
-COMPILE_ARGS    += -DUNIT_DELAY=\#1
-VERILOG_SOURCES += $(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v
-VERILOG_SOURCES += $(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v
+SIM_BUILD       = sim_build/gl
+COMPILE_ARGS   += -DGL_TEST
+COMPILE_ARGS   += -DFUNCTIONAL
+COMPILE_ARGS   += -DSIM
 
-# this gets copied in by the GDS action workflow
+# IHP SG13G2 primitives
+VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_io/verilog/sg13g2_io.v
+VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_stdcell/verilog/sg13g2_stdcell.v
+VERILOG_SOURCES += $(PWD)/models/SRAM_2P_core_behavioral_bm_bist_ideal.v
+VERILOG_SOURCES += $(SRC_DIR)/RM_IHPSG13_2P_1024x16_c2_bm_bist.v
+
+# The synthesized gate-level netlist
 VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 
 endif
+
+# Allow sharing configuration between design and testbench via `include`:
+COMPILE_ARGS    += -I$(SRC_DIR)
 
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/tb.v
