@@ -21,7 +21,7 @@ module DP_SRAM (
   // Physical Macro for OpenLane Synthesis
   wire [15:0] dout;
   
-  RM_IHPSG13_2P_1024x16_c2_bm_bist sram_macro (
+  RM_IHPSG13_2P_1024x16_c2_bm_bist sram (
       .A_CLK(CLK_i),
       .A_MEN(WE_i),
       .A_WEN(WE_i),
