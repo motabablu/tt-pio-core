@@ -37,7 +37,7 @@
       "instances": {
         "u_asic_top.u_imem.sram": {
           "location": [42, 20],
-          "orientation": "R90"
+          "orientation": "R0"
         }
       },
       "gds": [
