@@ -45,7 +45,7 @@ module DP_SRAM (
       .A_BIST_MEN(1'b0),
       .A_BIST_WEN(1'b0),
       .A_BIST_REN(1'b0),
-      .A_BIST_ADDR(10'b0),
+      .A_BIST_ADDR(9'b0),
       .A_BIST_DIN(16'b0),
       .A_BIST_BM(16'b0),
       .B_BIST_CLK(1'b0),
@@ -53,7 +53,7 @@ module DP_SRAM (
       .B_BIST_MEN(1'b0),
       .B_BIST_WEN(1'b0),
       .B_BIST_REN(1'b0),
-      .B_BIST_ADDR(10'b0),
+      .B_BIST_ADDR(9'b0),
       .B_BIST_DIN(16'b0),
       .B_BIST_BM(16'b0)
   );
