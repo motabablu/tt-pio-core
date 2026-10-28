@@ -40,7 +40,7 @@ COMPILE_ARGS   += -DSIM
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_io/verilog/sg13g2_io.v
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_stdcell/verilog/sg13g2_stdcell.v
 VERILOG_SOURCES += $(PWD)/models/SRAM_2P_core_behavioral_bm_bist_ideal.v
-VERILOG_SOURCES += $(SRC_DIR)/RM_IHPSG13_2P_1024x16_c2_bm_bist.v
+VERILOG_SOURCES += $(SRC_DIR)/RM_IHPSG13_2P_512x16_c2_bm_bist.v
 
 # The synthesized gate-level netlist
 VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
