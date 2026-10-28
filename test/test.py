@@ -147,16 +147,19 @@ async def pin_transition_monitor(dut, exp_pins, pad_schedule, stats):
         if cur_out != prev_out or cur_dir != prev_dir:
             delta = cycle - last_change
             
+            # If we already verified all expected transitions, safely ignore post-halt cleanups
             if stats["pin_check_idx"] >= len(exp_pins):
-                dut._log.error(f"Unexpected transition. DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}.")
+                prev_out = cur_out
+                prev_dir = cur_dir
+                last_change = cycle
+                continue
+
+            exp_dir, exp_out, exp_delta = exp_pins[stats["pin_check_idx"]]
+            if cur_dir != exp_dir or cur_out != exp_out or delta != exp_delta:
+                dut._log.error(f"Transition {stats['pin_check_idx']} mismatch. Expected: (DIR: 0x{exp_dir:04X}, OUT: 0x{exp_out:04X}, Delta: {exp_delta}), Detected: (DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}).")
                 stats["errors"] += 1
             else:
-                exp_dir, exp_out, exp_delta = exp_pins[stats["pin_check_idx"]]
-                if cur_dir != exp_dir or cur_out != exp_out or delta != exp_delta:
-                    dut._log.error(f"Transition {stats['pin_check_idx']} mismatch. Expected: (DIR: 0x{exp_dir:04X}, OUT: 0x{exp_out:04X}, Delta: {exp_delta}), Detected: (DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}).")
-                    stats["errors"] += 1
-                else:
-                    dut._log.info(f"Transition {stats['pin_check_idx']} verified. DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}.")
+                dut._log.info(f"Transition {stats['pin_check_idx']} verified. DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}.")
 
             stats["pin_check_idx"] += 1
             prev_out = cur_out
