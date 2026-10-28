@@ -6,7 +6,7 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer, ClockCycles
 
-# Hardware Port Mapping
+# Port assignments.
 SPI_SCK_BIT  = 0
 SPI_MOSI_BIT = 1
 SPI_CS_N_BIT = 2
@@ -16,29 +16,29 @@ def resolve_int(val):
     try:
         return int(val)
     except ValueError:
-        # Sanitize 'x' and 'z' to '0' so valid bits aren't masked
+        # Sanitize high-impedance and unknown states.
         safe_str = str(val).lower().replace('x', '0').replace('z', '0')
         return int(safe_str, 2)
 
 def get_pad_out(dut):
-    # pad_out[7:0] -> uio_out[7:0], pad_out[14:8] -> uo_out[7:1]
+    # Map output vectors.
     uio_out = resolve_int(dut.uio_out.value)
     uo_out  = resolve_int(dut.uo_out.value)
     return (uio_out & 0xFF) | ((uo_out >> 1) << 8)
 
 def get_pad_dir(dut):
-    # pad_dir[7:0] -> uio_oe[7:0], upper 8 bits are hard-wired in TT wrapper
+    # Map direction vectors.
     uio_oe = resolve_int(dut.uio_oe.value)
     return (uio_oe & 0xFF) | 0x7F00
 
 def set_pad_in(dut, val):
-    # pad_in[7:0] -> uio_in[7:0], pad_in[12:8] -> ui_in[7:3]
+    # Map input vectors.
     dut.uio_in.value = val & 0xFF
     current_ui = resolve_int(dut.ui_in.value)
     new_ui = (current_ui & 0x07) | (((val >> 8) & 0x1F) << 3)
     dut.ui_in.value = new_ui
 
-# File Loaders
+# File parsing subroutines.
 def get_sim_path(filename):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sim", filename))
 
@@ -81,40 +81,51 @@ def load_pad_in_schedule(filename):
                 schedule[(val32 >> 16) & 0xFFFF] = val32 & 0xFFFF
     return schedule
 
-# SPI Master Driver
+# SPI master interface.
 async def spi_transfer(dut, cmd, addr, data_in):
     frame = (cmd << 32) | (addr << 16) | data_in
     miso_capture = 0
 
     await RisingEdge(dut.clk)
-    dut.ui_in.value = resolve_int(dut.ui_in.value) & ~(1 << SPI_CS_N_BIT)
+    
+    # Delta cycle state tracking.
+    ui_shadow = resolve_int(dut.ui_in.value)
+    
+    ui_shadow &= ~(1 << SPI_CS_N_BIT)
+    dut.ui_in.value = ui_shadow
     await Timer(50, units="ns")
 
     for b in range(39, -1, -1):
         if (frame >> b) & 1:
-            dut.ui_in.value = resolve_int(dut.ui_in.value) | (1 << SPI_MOSI_BIT)
+            ui_shadow |= (1 << SPI_MOSI_BIT)
         else:
-            dut.ui_in.value = resolve_int(dut.ui_in.value) & ~(1 << SPI_MOSI_BIT)
-
+            ui_shadow &= ~(1 << SPI_MOSI_BIT)
+        
+        dut.ui_in.value = ui_shadow
         await Timer(50, units="ns")
-        dut.ui_in.value = resolve_int(dut.ui_in.value) | (1 << SPI_SCK_BIT)
+        
+        ui_shadow |= (1 << SPI_SCK_BIT)
+        dut.ui_in.value = ui_shadow
 
         if b < 16:
             miso_bit = (resolve_int(dut.uo_out.value) >> SPI_MISO_BIT) & 1
             miso_capture |= (miso_bit << b)
 
         await Timer(50, units="ns")
-        dut.ui_in.value = resolve_int(dut.ui_in.value) & ~(1 << SPI_SCK_BIT)
+        
+        ui_shadow &= ~(1 << SPI_SCK_BIT)
+        dut.ui_in.value = ui_shadow
 
     await Timer(50, units="ns")
-    dut.ui_in.value = resolve_int(dut.ui_in.value) | (1 << SPI_CS_N_BIT)
+    ui_shadow |= (1 << SPI_CS_N_BIT)
+    dut.ui_in.value = ui_shadow
     
     for _ in range(5):
         await RisingEdge(dut.clk)
 
     return miso_capture
 
-# Scoreboard Monitor
+# Event monitoring.
 async def pin_transition_monitor(dut, exp_pins, pad_schedule, stats):
     cycle = 0
     last_change = 0
@@ -137,25 +148,25 @@ async def pin_transition_monitor(dut, exp_pins, pad_schedule, stats):
             delta = cycle - last_change
             
             if stats["pin_check_idx"] >= len(exp_pins):
-                dut._log.error(f"Unexpected transition: DIR=0x{cur_dir:04X}, OUT=0x{cur_out:04X}, Delta={delta}")
+                dut._log.error(f"Unexpected transition. DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}.")
                 stats["errors"] += 1
             else:
                 exp_dir, exp_out, exp_delta = exp_pins[stats["pin_check_idx"]]
                 if cur_dir != exp_dir or cur_out != exp_out or delta != exp_delta:
-                    dut._log.error(f"Mismatch [{stats['pin_check_idx']}]: Exp(DIR=0x{exp_dir:04X}, OUT=0x{exp_out:04X}, Delta={exp_delta}) | Got(DIR=0x{cur_dir:04X}, OUT=0x{cur_out:04X}, Delta={delta})")
+                    dut._log.error(f"Transition {stats['pin_check_idx']} mismatch. Expected: (DIR: 0x{exp_dir:04X}, OUT: 0x{exp_out:04X}, Delta: {exp_delta}), Detected: (DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}).")
                     stats["errors"] += 1
                 else:
-                    dut._log.info(f"Matched [{stats['pin_check_idx']}]: DIR=0x{cur_dir:04X}, OUT=0x{cur_out:04X}, Delta={delta}")
+                    dut._log.info(f"Transition {stats['pin_check_idx']} verified. DIR: 0x{cur_dir:04X}, OUT: 0x{cur_out:04X}, Delta: {delta}.")
 
             stats["pin_check_idx"] += 1
             prev_out = cur_out
             prev_dir = cur_dir
             last_change = cycle
 
-# Main Testbench Sequence
+# Execution framework.
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Initializing ASIC protocol test")
+    dut._log.info("Initialization sequence started.")
 
     clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
@@ -175,7 +186,7 @@ async def test_project(dut):
     exp_c2h      = load_hex_words("expected_c2h.hex")
     pad_schedule = load_pad_in_schedule("pad_in.hex")
     
-    dut._log.info(f"Loaded {len(prog_words)} IMEM instructions, {len(exp_pins)} pin transitions.")
+    dut._log.info(f"Loaded {len(prog_words)} instructions, {len(exp_pins)} transitions.")
 
     await spi_transfer(dut, 0x00, 0, 0)
     for pc_idx, instr in enumerate(prog_words):
@@ -187,7 +198,7 @@ async def test_project(dut):
     stats = {"pin_check_idx": 0, "errors": 0}
     cocotb.start_soon(pin_transition_monitor(dut, exp_pins, pad_schedule, stats))
 
-    dut._log.info("Executing program.")
+    dut._log.info("Execution sequence started.")
     await spi_transfer(dut, 0x01, 0, 0)
 
     MAX_CYCLES = 50000
@@ -199,13 +210,15 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 100)
     
     if stats["pin_check_idx"] < len(exp_pins):
-        dut._log.error(f"Timeout: Caught {stats['pin_check_idx']}/{len(exp_pins)} transitions.")
+        dut._log.error(f"Timeout detected. Transitions completed: {stats['pin_check_idx']}/{len(exp_pins)}.")
         stats["errors"] += 1
 
     await spi_transfer(dut, 0x00, 0, 0)
     
-    dut._log.info("Verifying C2H FIFO.")
+    dut._log.info("C2H FIFO verification sequence.")
     idx = 0
+    safety_limit = len(exp_c2h) + 10 # Infinite loop mitigation.
+    
     while True:
         status_word = await spi_transfer(dut, 0x05, 0, 0)
         if status_word & 1:
@@ -213,18 +226,26 @@ async def test_project(dut):
 
         c2h_word = await spi_transfer(dut, 0x04, 0, 0)
         if idx >= len(exp_c2h):
-            dut._log.error(f"Unexpected C2H[{idx}]: 0x{c2h_word:04X}")
+            dut._log.error(f"C2H[{idx}] anomaly: 0x{c2h_word:04X}.")
             stats["errors"] += 1
+            break # Halt on anomaly.
+            
         elif c2h_word != exp_c2h[idx]:
-            dut._log.error(f"C2H[{idx}] mismatch: Exp 0x{exp_c2h[idx]:04X} | Got 0x{c2h_word:04X}")
+            dut._log.error(f"C2H[{idx}] mismatch. Expected: 0x{exp_c2h[idx]:04X}, Detected: 0x{c2h_word:04X}.")
             stats["errors"] += 1
         else:
-            dut._log.info(f"C2H[{idx}] matched: 0x{c2h_word:04X}")
+            dut._log.info(f"C2H[{idx}] verified: 0x{c2h_word:04X}.")
+        
         idx += 1
+        
+        if idx > safety_limit:
+            dut._log.error("Safety limit exceeded. FIFO not empty.")
+            stats["errors"] += 1
+            break
 
     if idx != len(exp_c2h):
-        dut._log.error(f"C2H count mismatch: Exp {len(exp_c2h)} | Got {idx}")
+        dut._log.error(f"C2H length mismatch. Expected: {len(exp_c2h)}, Detected: {idx}.")
         stats["errors"] += 1
 
-    assert stats["errors"] == 0, f"Verification failed with {stats['errors']} errors."
-    dut._log.info("Verification passed.")
+    assert stats["errors"] == 0, f"Verification failed. Errors detected: {stats['errors']}."
+    dut._log.info("Verification successful.")
