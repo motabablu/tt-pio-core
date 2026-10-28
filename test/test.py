@@ -27,9 +27,9 @@ def get_pad_out(dut):
     return (uio_out & 0xFF) | ((uo_out >> 1) << 8)
 
 def get_pad_dir(dut):
-    # Map direction vectors.
+    # Map direction vectors. Upper 8 bits are 0x00 to match Golden Model
     uio_oe = resolve_int(dut.uio_oe.value)
-    return (uio_oe & 0xFF) | 0x7F00
+    return uio_oe & 0xFF
 
 def set_pad_in(dut, val):
     # Map input vectors.
