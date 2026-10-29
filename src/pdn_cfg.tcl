@@ -68,8 +68,7 @@ if { $::env(PDN_ENABLE_RAILS) == 1 } {
         -layers "$::env(PDN_RAIL_LAYER) $::env(PDN_VERTICAL_LAYER)"
 }
 
-# SRAM macro grid: use horizontal Metal5 stripes to bridge vertical Metal4 macro pins
-# to vertical TopMetal1 core stripes when macro is in R0 orientation.
+# SRAM macro grid: connect Metal4 (macro power pins) to TopMetal1 (PDN stripes)
 define_pdn_grid \
     -macro \
     -default \
@@ -77,19 +76,6 @@ define_pdn_grid \
     -starts_with POWER \
     -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
 
-add_pdn_stripe \
-    -grid macro \
-    -layer Metal5 \
-    -width 2.0 \
-    -pitch 20.0 \
-    -offset 5.0 \
-    -spacing 4.0 \
-    -starts_with POWER
-
 add_pdn_connect \
     -grid macro \
-    -layers "Metal4 Metal5"
-
-add_pdn_connect \
-    -grid macro \
-    -layers "Metal5 $::env(PDN_VERTICAL_LAYER)"
+    -layers "Metal4 $::env(PDN_VERTICAL_LAYER)"

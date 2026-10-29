@@ -7,8 +7,8 @@ project:
   language:     "SystemVerilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     50000000      # Clock frequency in Hz (or 0 if not applicable)
 
-  # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "8x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  # How many tiles your design occupies? A single tile is about 202x155 uM.
+  tiles: "8x4"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2, 8x2, 3x4, 4x4, 5x4, 6x4 or 8x4
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
   top_module:  "tt_um_pio_core"
@@ -22,7 +22,7 @@ project:
     - "core_top.sv"
     - "alu.sv"
     - "decoder.sv"
-    - "RM_IHPSG13_2P_1024x16_c2_bm_bist.v"
+    - "RM_IHPSG13_2P_512x16_c2_bm_bist.v"
     - "dp_sram.sv"
     - "fifo.sv"
     - "reg_file.sv"
@@ -31,6 +31,7 @@ project:
     - "timing_controller.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
+# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
   ui[0]: "SPI_SCK"
