@@ -21,7 +21,10 @@ jobs:
 
       - name: Install Python packages
         shell: bash
-        run: pip install -r test/requirements.txt
+        run: |
+          pip install --upgrade pip
+          pip install -r test/requirements.txt
+          pip install cocotb-tools
 
       - name: Run tests
         run: |
