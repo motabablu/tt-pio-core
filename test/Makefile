@@ -26,23 +26,20 @@ ifneq ($(GATES),yes)
 SIM_BUILD       = sim_build/rtl
 COMPILE_ARGS   += -g2012
 COMPILE_ARGS   += -DFUNCTIONAL
-VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
+VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES)) models/RM_IHPSG13_2P_core_behavioral_bm_bist_ideal.v models/RM_IHPSG13_2P_512x16_c2_bm_bist.v
 
 else
 
 # Gate level simulation:
-SIM_BUILD       = sim_build/gl
-COMPILE_ARGS   += -DGL_TEST
-COMPILE_ARGS   += -DFUNCTIONAL
-COMPILE_ARGS   += -DSIM
-
-# IHP SG13G2 primitives
+SIM_BUILD				= sim_build/gl
+COMPILE_ARGS    += -DGL_TEST
+COMPILE_ARGS    += -DFUNCTIONAL
+COMPILE_ARGS    += -DSIM
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_io/verilog/sg13g2_io.v
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_stdcell/verilog/sg13g2_stdcell.v
-VERILOG_SOURCES += $(PWD)/models/SRAM_2P_core_behavioral_bm_bist_ideal.v
-VERILOG_SOURCES += $(SRC_DIR)/RM_IHPSG13_2P_512x16_c2_bm_bist.v
+VERILOG_SOURCES += models/RM_IHPSG13_2P_core_behavioral_bm_bist_ideal.v models/RM_IHPSG13_2P_512x16_c2_bm_bist.v
 
-# The synthesized gate-level netlist
+# this gets copied in by the GDS action workflow
 VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 
 endif

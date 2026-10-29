@@ -47,13 +47,13 @@
         "dir::../macro/RM_IHPSG13_2P_512x16_c2_bm_bist/RM_IHPSG13_2P_512x16_c2_bm_bist.lef"
       ],
       "lib": {
-        "nom_*": [
+        "nom_typ_1p20V_25C": [
           "dir::../macro/RM_IHPSG13_2P_512x16_c2_bm_bist/RM_IHPSG13_2P_512x16_c2_bm_bist_typ_1p20V_25C.lib"
         ],
-        "min_*": [
+        "nom_fast_1p32V_m40C": [
           "dir::../macro/RM_IHPSG13_2P_512x16_c2_bm_bist/RM_IHPSG13_2P_512x16_c2_bm_bist_fast_1p32V_m55C.lib"
         ],
-        "max_*": [
+        "nom_slow_1p08V_125C": [
           "dir::../macro/RM_IHPSG13_2P_512x16_c2_bm_bist/RM_IHPSG13_2P_512x16_c2_bm_bist_slow_1p08V_125C.lib"
         ],
         "*": [
@@ -69,9 +69,15 @@
     }
   },
   "PDN_MACRO_CONNECTIONS": [
-    "u_asic_top.u_imem.sram VPWR VGND VDD! VSS!",
-    "u_asic_top.u_imem.sram VPWR VGND VDDARRAY! VSS!"
+    "u_asic_top\\.u_imem\\.sram VPWR VGND VDD! VSS!",
+    "u_asic_top\\.u_imem\\.sram VPWR VGND VDDARRAY! VSS!"
   ],
+  "PNR_CORNERS": [
+    "nom_typ_1p20V_25C",
+    "nom_slow_1p08V_125C"
+  ],
+  "VDD_PIN": "VPWR",
+  "GND_PIN": "VGND",
 
   "//": "Custom PDN config: SRAM power pins are on Metal4, need Metal4↔TopMetal1 connection",
   "PDN_CFG": "dir::pdn_cfg.tcl",
