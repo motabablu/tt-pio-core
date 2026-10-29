@@ -10,14 +10,14 @@ module DP_SRAM (
   input   logic [15:0] DATA_WR_i
 );
 
-`ifndef SYNTHESIS
-  // Behavioral RAM for RTL Simulation
-  logic [15:0] mem [0:511];
-  always_ff @(posedge CLK_i) begin
-    if (WE_i) mem[ADDR_WR_i[8:0]] <= DATA_WR_i;
-    DATA_RD_o <= mem[ADDR_RD_i[8:0]];
-  end
-`else
+//`ifndef SYNTHESIS
+//  // Behavioral RAM for RTL Simulation
+//  logic [15:0] mem [0:511];
+//  always_ff @(posedge CLK_i) begin
+//    if (WE_i) mem[ADDR_WR_i[8:0]] <= DATA_WR_i;
+//    DATA_RD_o <= mem[ADDR_RD_i[8:0]];
+//  end
+//`else
   // Physical Macro for OpenLane Synthesis
   wire [15:0] dout;
   wire [15:0] unused_a_dout; // LVS ERRORS
