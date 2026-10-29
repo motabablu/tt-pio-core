@@ -1,6 +1,6 @@
 # Custom PDN configuration for SRAM macro integration
 #
-# The SRAM macro (RM_IHPSG13_2P_512x16_c2_bm_bist) has power pins
+# The SRAM macro (RM_IHPSG13_1P_1024x8_c2_bm_bist) has power pins
 # (VDD!, VDDARRAY!, VSS!) on Metal4. The default macro PDN grid tries
 # to connect TopMetal1↔TopMetal2, which fails when FP_PDN_MULTILAYER=0
 # (no TopMetal2 stripes). This custom config connects Metal4↔TopMetal1
@@ -68,7 +68,7 @@ if { $::env(PDN_ENABLE_RAILS) == 1 } {
         -layers "$::env(PDN_RAIL_LAYER) $::env(PDN_VERTICAL_LAYER)"
 }
 
-# SRAM macro grid: connect Metal4 (macro power pins) to Metal5, then to TopMetal1 (PDN stripes)
+# SRAM macro grid: connect Metal4 (macro power pins) to TopMetal1 (PDN stripes)
 define_pdn_grid \
     -macro \
     -default \
@@ -78,8 +78,4 @@ define_pdn_grid \
 
 add_pdn_connect \
     -grid macro \
-    -layers "Metal4 Metal5"
-
-add_pdn_connect \
-    -grid macro \
-    -layers "Metal5 $::env(PDN_VERTICAL_LAYER)"
+    -layers "Metal4 $::env(PDN_VERTICAL_LAYER)"
