@@ -1,13 +1,4 @@
 # Custom PDN configuration for SRAM macro integration
-#
-# The SRAM macro (RM_IHPSG13_1P_1024x8_c2_bm_bist) has power pins
-# (VDD!, VDDARRAY!, VSS!) on Metal4. The default macro PDN grid tries
-# to connect TopMetal1↔TopMetal2, which fails when FP_PDN_MULTILAYER=0
-# (no TopMetal2 stripes). This custom config connects Metal4↔TopMetal1
-# for the macro grid instead.
-#
-# Based on librelane's default pdn_cfg.tcl.
-
 source $::env(SCRIPTS_DIR)/openroad/common/set_global_connections.tcl
 set_global_connections
 
@@ -39,7 +30,7 @@ foreach vdd $::env(VDD_NETS) gnd $::env(GND_NETS) {
 set_voltage_domain -name CORE -power $::env(VDD_NET) -ground $::env(GND_NET) \
     -secondary_power $secondary
 
-# Stdcell grid: single-layer (TopMetal1 vertical stripes only)
+# Stdcell grid: single-layer vertical stripes only
 define_pdn_grid \
     -name stdcell_grid \
     -starts_with POWER \
@@ -68,7 +59,7 @@ if { $::env(PDN_ENABLE_RAILS) == 1 } {
         -layers "$::env(PDN_RAIL_LAYER) $::env(PDN_VERTICAL_LAYER)"
 }
 
-# SRAM macro grid: connect Metal4 (macro power pins) to TopMetal1 (PDN stripes)
+# SRAM macro grid: explicitly connect Metal4 macro power pins to TopMetal1
 define_pdn_grid \
     -macro \
     -default \
@@ -78,4 +69,4 @@ define_pdn_grid \
 
 add_pdn_connect \
     -grid macro \
-    -layers "Metal4 $::env(PDN_VERTICAL_LAYER)"
+    -layers "Metal4 TopMetal1"
