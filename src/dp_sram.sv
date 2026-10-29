@@ -60,6 +60,6 @@ module DP_SRAM (
   );
 
   assign DATA_RD_o = dout;
-`endif
+//`endif
 
 endmodule
