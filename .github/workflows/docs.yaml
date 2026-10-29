@@ -6,15 +6,12 @@ on:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - name: Setup Typst
-        uses: typst-community/setup-typst@v3
-
       - name: Build docs
-        uses: TinyTapeout/tt-gds-action/docs@tt08
+        uses: TinyTapeout/tt-gds-action/docs@ttihp27a
