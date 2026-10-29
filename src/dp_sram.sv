@@ -20,7 +20,6 @@ module DP_SRAM (
 `else
   // Physical Macro for OpenLane Synthesis
   wire [15:0] dout;
-  wire [15:0] unused_a_dout; // LVS ERRORS
   
   RM_IHPSG13_2P_512x16_c2_bm_bist sram (
       .A_CLK(CLK_i),
@@ -30,7 +29,7 @@ module DP_SRAM (
       .A_ADDR(ADDR_WR_i[8:0]),
       .A_DIN(DATA_WR_i),
       .A_DLY(1'b1),
-      .A_DOUT(unused_a_dout),
+      .A_DOUT(),
       .A_BM(16'hFFFF),
       .B_CLK(CLK_i),
       .B_MEN(1'b1),
