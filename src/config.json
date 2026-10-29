@@ -76,6 +76,8 @@
     "nom_typ_1p20V_25C",
     "nom_slow_1p08V_125C"
   ],
+  "VDD_PIN": "VPWR",
+  "GND_PIN": "VGND",
 
   "//": "Custom PDN config: SRAM power pins are on Metal4, need Metal4↔TopMetal1 connection",
   "PDN_CFG": "dir::pdn_cfg.tcl",
