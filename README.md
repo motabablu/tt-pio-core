@@ -6,12 +6,17 @@
 
 This repository contains the SystemVerilog RTL, verification framework, and custom software toolchain for a 16-bit RISC I/O co-processor. The core is a single-cycle, Harvard architecture designed for deterministic, cycle-accurate multi-protocol emulation (SPI, I2C, USB 1.1, CAN, UART, Ethernet) and is targeted for the Tiny Tapeout IHP 130nm CMOS5L open-source silicon shuttle.
 
-## Repository Structure
+## System Architecture
 
-- **src/**: Core SystemVerilog RTL, including the ALU, Decoder, custom SMU co-processor, and integrated IHP dual-port SRAM macros (`RM_IHPSG13_2P_1024x16_c2_bm_bist`), along with the Tiny Tapeout physical wrapper.
-- **test/**: cocotb and Icarus Verilog testing framework configured for the Tiny Tapeout CI/CD pipeline.
-- **asm/**: Custom Python-based assembler (`compiler.py`) and detailed Instruction Set Architecture (ISA) documentation.
-- **sim/**: Python Golden Model and SystemVerilog scoreboards used for protocol and instruction verification.
+![ASIC Block Diagram](docs/asic_block_diagram.png)
+
+---
+
+## Acknowledgments & Flow Credits
+
+This project successfully incorporates hard SRAM macro integration and single-layer power domain extension building upon the open-source LibreLane plugin architecture from:
+- **Flow & Integration Guide:** [Dropping a real SRAM macro into your CMOS5L tile](https://github.com/kdp1965/ihp-um-janestreet-prism)
+- **Reference Repository:** [kdp1965/ihp-um-janestreet-prism](https://github.com/kdp1965/ihp-um-janestreet-prism)
 
 ---
 
