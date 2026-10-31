@@ -10,6 +10,10 @@ This repository contains the SystemVerilog RTL, verification framework, and cust
 
 ![ASIC Block Diagram](docs/asic_block_diagram.png)
 
+## GDS Render
+
+![GDS Render](docs/gds_render.png)
+
 ---
 
 ## Acknowledgments & Flow Credits
