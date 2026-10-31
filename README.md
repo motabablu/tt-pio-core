@@ -18,7 +18,7 @@ This repository contains the SystemVerilog RTL, verification framework, and cust
 
 ## Acknowledgments & Flow Credits
 
-This project successfully incorporates hard SRAM macro integration and single-layer power domain extension building upon the open-source LibreLane plugin architecture from:
+This project successfully incorporates hard SRAM macro integration and single-layer power domain extension, building upon the open-source LibreLane plugin architecture from:
 - **Flow & Integration Guide:** [Dropping a real SRAM macro into your CMOS5L tile](https://github.com/kdp1965/ihp-um-janestreet-prism)
 - **Reference Repository:** [kdp1965/ihp-um-janestreet-prism](https://github.com/kdp1965/ihp-um-janestreet-prism)
 
