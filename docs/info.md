@@ -44,7 +44,7 @@ The memory subsystem uses the IHP dual-port SRAM macro `RM_IHPSG13_2P_512x16_c2_
 ## 4. Hardware FIFO Stream Subsystems `FIFO`
 
 Data exchange between the external host interface and the core execution unit is handled via two independent hardware FIFO instances `u_h2c_fifo` and `u_c2h_fifo`:
-* **Structural Parameters:** Depth = 256 words, Data Width = 16 bits, Address Pointer Width = 8 bits (with full/empty detection flags).
+* **Structural Parameters:** Depth = 64 words, Data Width = 16 bits, Address Pointer Width = 6 bits (with full/empty detection flags).
 * **H2C (Host-to-Core) FIFO:** Buffers data pushed by the external SPI controller `SPI_MOSI` and popped by the core execution unit during `POP` instructions.
 * **C2H (Core-to-Host) FIFO:** Buffers data pushed by the core via `PUSH` instructions and popped by the SPI controller for host egress `SPI_MISO`.
 
