@@ -120,10 +120,10 @@ Use `/tb/asic_tb.sv`, or
    ```
 
 ### Repository Structure
-- **asm/**: Example Assembly files for test.
-- **macro/**: IHP dual-port SRAM macros `RM_IHPSG13_2P_512x16_c2_bm_bist`.
-- **scripts/**: Python script `assembler.py` to compile assembly programs from (..`/asm`, ingest input vectors from `../sim/h2c.hex` and build `../sim/program.hex`, `../sim/expected_c2h.hex`, `../sim/expected_pins.hex`, `../sim/pad_in.hex`.
-- **sim/**: Simulation stimulus hex files, test vectors, pad schedules and scoreboard transition outputs.
-- **src/**: Core SystemVerilog RTL, blackbox IHP SRAM, Tiny Tapeout physical wrapper, GDS configuration `config.json` and PDN setup `pdn_cfg.tcl`.
-- **tb/**: Systemverilog testbench harness `asic_tb.sv`.
-- **test/**: cocotb Python verification drivers `test.py`, Verilog wrappers `tb.v`, behavioral SRAM models, and project Makefile configured for the Tiny Tapeout pipeline.
+- `**asm/**`: Example Assembly files for test.
+- `**macro/**`: IHP dual-port SRAM macros `RM_IHPSG13_2P_512x16_c2_bm_bist`.
+- `**scripts/**`: Python script `assembler.py` to compile assembly programs from (..`/asm`, ingest input vectors from `../sim/h2c.hex` and build `../sim/program.hex`, `../sim/expected_c2h.hex`, `../sim/expected_pins.hex`, `../sim/pad_in.hex`.
+- `**sim/**`: Simulation stimulus hex files, test vectors, pad schedules and scoreboard transition outputs.
+- `**src/**`: Core SystemVerilog RTL, blackbox IHP SRAM, Tiny Tapeout physical wrapper, GDS configuration `config.json` and PDN setup `pdn_cfg.tcl`.
+- `**tb/**`: Systemverilog testbench harness `asic_tb.sv`.
+- `**test/**`: cocotb Python verification drivers `test.py`, Verilog wrappers `tb.v`, behavioral SRAM models, and project Makefile configured for the Tiny Tapeout pipeline.
